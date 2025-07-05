@@ -19,4 +19,4 @@ jobs:
 
       - name: Run MATLAB script with full path
         shell: powershell
-        run: matlab -batch "run(fullfile(getenv('GITHUB_WORKSPACE'), 'test_0705.m'))"
+        run: matlab -batch "run(fullfile(getenv('GITHUB_WORKSPACE'), 'BatteryManagementSystem\Tests\test_0705.m'))"
