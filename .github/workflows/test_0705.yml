@@ -1,22 +1,26 @@
-name: Run MATLAB Test for test_0705
+name: Run test_0705.m when Tests folder changes
 
 on:
   push:
     branches:
       - test_0705
+    paths:
+      - BatteryManagementSystem/Tests/**  # 이 경로에 변경이 있을 때만 실행됨
 
 jobs:
   run-matlab-test:
     runs-on: self-hosted
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set PowerShell policy to allow scripts
+      - name: Set PowerShell execution policy (Windows only)
         shell: powershell
         run: Set-ExecutionPolicy Bypass -Scope Process -Force
 
-      - name: Run MATLAB script with full path
+      - name: Run MATLAB test_0705.m
         shell: powershell
-        run: matlab -batch "run(fullfile(getenv('GITHUB_WORKSPACE'), 'BatteryManagementSystem\Tests\test_0705.m'))"
+        run: |
+          $workspace = $env:GITHUB_WORKSPACE
+          matlab -batch "run(fullfile('$workspace', 'BatteryManagementSystem', 'Tests', 'test_0705.m'))"
