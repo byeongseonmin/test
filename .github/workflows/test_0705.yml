@@ -7,12 +7,16 @@ on:
 
 jobs:
   run-matlab-test:
-    name: Run test_0705.m
     runs-on: self-hosted
+
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run MATLAB test_0705.m
-        run: |
-          matlab -batch "run('test_0705.m')"
+      - name: Set PowerShell policy to allow scripts
+        shell: powershell
+        run: Set-ExecutionPolicy Bypass -Scope Process -Force
+
+      - name: Run MATLAB script with full path
+        shell: powershell
+        run: matlab -batch "run(fullfile(getenv('GITHUB_WORKSPACE'), 'test_0705.m'))"
