@@ -16,22 +16,16 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Create Artifacts Directory
-        shell: pwsh
+      - name: Create Artifact Directory
+        shell: cmd
         run: mkdir artifacts
 
       - name: Run Simulink Test using MATLAB
-        shell: pwsh
+        shell: cmd
         run: |
-          matlab -batch "import sltest.testmanager.*; \
-            tf = sltest.testmanager.TestFile('BatteryManagementSystem/Tests/System/BMS_ClosedLoop_Test.mldatx'); \
-            resultSet = sltest.testmanager.run(tf); \
-            sltest.testmanager.exportResults(resultSet, 'artifacts/BMS_TestResult.mldatx'); \
-            sltest.testmanager.exportResults(resultSet, 'artifacts/BMS_TestResult.xml', 'ExportFormat', 'JUnit'); \
-            sltest.testmanager.clear; \
-            sltest.testmanager.clearResults;"
+          matlab -batch "import sltest.testmanager.*; tf = sltest.testmanager.TestFile('BatteryManagementSystem/Tests/System/BMS_ClosedLoop_Test.mldatx'); resultSet = sltest.testmanager.run(tf); sltest.testmanager.exportResults(resultSet, 'artifacts/BMS_TestResult.mldatx'); sltest.testmanager.exportResults(resultSet, 'artifacts/BMS_TestResult.xml', 'ExportFormat', 'JUnit'); sltest.testmanager.clear; sltest.testmanager.clearResults;"
 
-      - name: Upload Test Results
+      - name: Upload Test Result as GitHub Artifact
         uses: actions/upload-artifact@v4
         with:
           name: BMS-Simulink-Test-Results
