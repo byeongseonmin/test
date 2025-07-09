@@ -25,21 +25,16 @@ jobs:
           $workspace = $env:GITHUB_WORKSPACE
           matlab -batch "run(fullfile('$workspace', 'BatteryManagementSystem', 'Tests', 'test_0705.m'))"
 
+      - name: Run tests
+        uses: matlab-actions/run-tests@v2
 
-      - name: Run Simulink Test (mldatx)
-        shell: powershell
-        run: |
-          mkdir -p artifacts
-          matlab -batch "import sltest.testmanager.*; \
-                         tf = sltest.testmanager.TestFile('BMS_ClosedLoop_Test.mldatx'); \
-                         resultSet = sltest.testmanager.run(tf); \
-                         sltest.testmanager.exportResults(resultSet, 'artifacts/BMS_TestResult.mldatx'); \
-                         sltest.testmanager.exportResults(resultSet, 'artifacts/BMS_TestResult.xml', 'ExportFormat', 'JUnit'); \
-                         sltest.testmanager.clear; \
-                         sltest.testmanager.clearResults;"
-
-      - name: Upload Test Results
-        uses: actions/upload-artifact@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up MATLAB
+        uses: matlab-actions/setup-matlab@v2
+      - name: Run tests
+        uses: matlab-actions/run-tests@v2
         with:
-          name: BMS-Simulink-Test-Results
-          path: artifacts/
+          test-results-junit: test-results/results.xml
+          code-coverage-cobertura: code-coverage/coverage.xml
+          
