@@ -27,7 +27,7 @@ jobs:
 
 
       - name: Run Simulink Test (mldatx)
-        shell: bash
+        shell: powershell
         run: |
           mkdir -p artifacts
           matlab -batch "import sltest.testmanager.*; \
