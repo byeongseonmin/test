@@ -23,7 +23,7 @@ jobs:
       - name: Run Simulink Test using MATLAB
         shell: cmd
         run: |
-          matlab -batch "import sltest.testmanager.*; tf = sltest.testmanager.TestFile('BatteryManagementSystem/Tests/System/BMS_ClosedLoop_Test.mldatx'); resultSet = sltest.testmanager.run(tf); sltest.testmanager.exportResults(resultSet, 'artifacts/BMS_TestResult.mldatx'); sltest.testmanager.exportResults(resultSet, 'artifacts/BMS_TestResult.xml', 'ExportFormat', 'JUnit'); sltest.testmanager.clear; sltest.testmanager.clearResults;"
+          matlab -batch "import sltest.testmanager.*; resultSet = sltest.testmanager.run('BatteryManagementSystem/Tests/System/BMS_ClosedLoop_Test.mldatx'); sltest.testmanager.exportResults(resultSet, 'artifacts/BMS_TestResult.mldatx'); sltest.testmanager.exportResults(resultSet, 'artifacts/BMS_TestResult.xml', 'ExportFormat', 'JUnit'); sltest.testmanager.clear; sltest.testmanager.clearResults;"
 
       - name: Upload Test Result as GitHub Artifact
         uses: actions/upload-artifact@v4
