@@ -8,33 +8,31 @@ on:
       - BatteryManagementSystem/Tests/**  # 이 경로에 변경이 있을 때만 실행됨
 
 jobs:
-  run-matlab-test:
+  simulink-test:
+    name: Run Simulink Test (.mldatx)
     runs-on: self-hosted
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set PowerShell execution policy (Windows only)
-        shell: powershell
-        run: Set-ExecutionPolicy Bypass -Scope Process -Force
+      - name: Create Artifacts Directory
+        shell: pwsh
+        run: mkdir artifacts
 
-      - name: Run MATLAB test_0705.m
-        shell: powershell
+      - name: Run Simulink Test using MATLAB
+        shell: pwsh
         run: |
-          $workspace = $env:GITHUB_WORKSPACE
-          matlab -batch "run(fullfile('$workspace', 'BatteryManagementSystem', 'Tests', 'test_0705.m'))"
+          matlab -batch "import sltest.testmanager.*; \
+            tf = sltest.testmanager.TestFile('BatteryManagementSystem/Tests/System/BMS_ClosedLoop_Test.mldatx'); \
+            resultSet = sltest.testmanager.run(tf); \
+            sltest.testmanager.exportResults(resultSet, 'artifacts/BMS_TestResult.mldatx'); \
+            sltest.testmanager.exportResults(resultSet, 'artifacts/BMS_TestResult.xml', 'ExportFormat', 'JUnit'); \
+            sltest.testmanager.clear; \
+            sltest.testmanager.clearResults;"
 
-      - name: Run tests
-        uses: matlab-actions/run-tests@v2
-
-      - name: Check out repository
-        uses: actions/checkout@v4
-      - name: Set up MATLAB
-        uses: matlab-actions/setup-matlab@v2
-      - name: Run tests
-        uses: matlab-actions/run-tests@v2
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v4
         with:
-          test-results-junit: test-results/results.xml
-          code-coverage-cobertura: code-coverage/coverage.xml
-          
+          name: BMS-Simulink-Test-Results
+          path: artifacts/
