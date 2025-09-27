@@ -1,0 +1,17 @@
+
+pipeline {
+    agent { label 'git-agent' } // 에이전트 라벨
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/byeongseonmin/test.git'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'ls -l' // 클론된 파일 확인
+            }
+        }
+    }
+}
+
